@@ -185,7 +185,7 @@ $wgAjaxWatch = true;
  * to. Useful for debugging.
  * @var bool $wgAllDBsAreLocalhost
  */
-$wgAllDBsAreLocalhost = false;
+$wgAllDBsAreLocalhost = true;
 
 /**
  * Merge all JavaScript / CSS files together.

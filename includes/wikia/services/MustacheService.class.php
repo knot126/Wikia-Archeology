@@ -151,8 +151,9 @@ class MustacheService {
 
 		// PHP extension is used for Mustache rendering
 		// @see https://github.com/jbboehr/php-mustache
-		$mustache = new Mustache();
-		return $mustache->render($template,$data,$partials);
+		//$mustache = new Mustache();
+		//return $mustache->render($template,$data,$partials);
+		return "";
 	}
 
 	/**

@@ -46,7 +46,7 @@ class HeliosClient {
 	 * @param string $schwartzToken
 	 * @param ServiceCircuitBreaker $circuitBreaker
 	 */
-	public function __construct( string $baseUri, string $schwartzToken, ServiceCircuitBreaker $circuitBreaker ) {
+	public function __construct( ?string $baseUri, ?string $schwartzToken, ?ServiceCircuitBreaker $circuitBreaker ) {
 		$this->baseUri = $baseUri;
 		$this->schwartzToken = $schwartzToken;
 		$this->circuitBreaker = $circuitBreaker;

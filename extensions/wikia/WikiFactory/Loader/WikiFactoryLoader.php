@@ -115,7 +115,7 @@ class WikiFactoryLoader {
 			}
 
 			$this->mCityID = false;
-		} elseif ( isset( $environment["SERVER_ID"] ) ) {
+		} /*elseif ( isset( $environment["SERVER_ID"] ) ) {
 			// interactive/cmdline
 			$this->mCityID = $environment["SERVER_ID"];
 			$this->mServerName = false;
@@ -128,6 +128,12 @@ class WikiFactoryLoader {
 		} else {
 			// nothing can be done at this point
 			throw new InvalidArgumentException( "Cannot tell which wiki it is (neither SERVER_NAME, SERVER_ID nor SERVER_DBNAME is defined)" );
+		}*/
+		else {
+			$this->mCityDB = "wiki";
+			$this->mServerName = false;
+			$this->mCommandLine = true;
+			$this->mCityID = false;
 		}
 
 		$this->mServerName = wfNormalizeHost( $this->mServerName );
@@ -299,18 +305,20 @@ class WikiFactoryLoader {
 		global $wgWikiFactoryCacheType;
 		$oMemc = wfGetCache( $wgWikiFactoryCacheType );
 
+		// NOTE knot126 disabled the cache
+		/*
 		if( empty( $this->mAlwaysFromDB ) ) {
 			/**
 			 * remember! for http requests we only known $this->mServerName
 			 * (domain), $this->mCityId is unknown (set to false in constructor)
-			 */
+			 *
 			wfProfileIn( __METHOD__."-domaincache" );
 			$key = WikiFactory::getDomainKey( rtrim( $this->mServerName . '/' . $this->langCode, '/' ) );
 			$this->mDomain = $oMemc->get( $key );
 			$this->mDomain = isset( $this->mDomain["id"] ) ? $this->mDomain : array ();
 			$this->debug( "reading from cache, key {$key}" );
 			wfProfileOut( __METHOD__."-domaincache" );
-		}
+		}*/
 
 		if( !isset( $this->mDomain["id"] ) || $this->mAlwaysFromDB ) {
 			wfProfileIn( __METHOD__."-domaindb" );
@@ -324,6 +332,8 @@ class WikiFactoryLoader {
 			 * interactive/cmdline case. We know city_id so we don't have to
 			 * ask city_domains table
 			 */
+			$this->mCityID = 177; // Community Central TODO make it configurable
+
 			if( $this->mCityID || $this->mCityDB) {
 				$oRow = $dbr->selectRow(
 						array( "city_list" ),
@@ -357,6 +367,7 @@ class WikiFactoryLoader {
 					);
 				}
 			} else {
+				/*
 				// request from HTTPD case.
 				// We only know server name so we have to ask city_domains table
 
@@ -431,30 +442,34 @@ class WikiFactoryLoader {
 							"cluster" => $oRow->city_cluster,
 						];
 					}
-				}
+				}*/
+				echo "Warning via knot126: Connecting without the wiki's database being known directly has been disabled.<br/>";
 			}
-			if( empty($this->mAlwaysFromDB) && !empty( $this->mWikiID ) ) {
+			
+			/*if( empty($this->mAlwaysFromDB) && !empty( $this->mWikiID ) ) {
 				/**
 				 * store value in cache
-				 */
+				 *
 				$oMemc->set(
 					WikiFactory::getDomainKey( rtrim( $this->mServerName . '/' . $this->langCode, '/' ) ),
 					$this->mDomain,
 					$this->mExpireDomainCacheTimeout
 				);
-			}
+			}*/
+			
 			$this->debug( "city_id={$this->mWikiID}, reading from database key {$this->mServerName}" );
 			wfProfileOut( __METHOD__."-domaindb" );
 		} else {
 			/**
 			 * data taken from cache
 			 */
-			$this->mWikiID = $this->mDomain["id"];
+			/*$this->mWikiID = $this->mDomain["id"];
 			$this->mCityUrl = $this->mDomain["url"];
 			$this->mIsWikiaActive = $this->mDomain["active"];
 			$this->mTimestamp = isset( $this->mDomain["time"] ) ? $this->mDomain["time"] : null;
 			$this->mCityDB = isset( $this->mDomain[ "db" ] ) ? $this->mDomain[ "db" ] : false;
-			$this->mCityCluster = $this->mDomain["cluster"];
+			$this->mCityCluster = $this->mDomain["cluster"];*/
+			echo "Warning via knot126: Try to take from cache, but that's not allowed!";
 		}
 
 		/**
@@ -464,7 +479,7 @@ class WikiFactoryLoader {
 		 */
 		if ( empty( $this->mWikiID ) || $this->mIsWikiaActive == - 1 ) {
 			if ( !$this->mCommandLine ) {
-				global $wgNotAValidWikia;
+				/*global $wgNotAValidWikia;
 				$redirect = $wgNotAValidWikia . '?from=' . rawurlencode( $this->mServerName );
 				if (  wfHttpsAllowedForURL( $redirect ) && !empty( $_SERVER['HTTP_FASTLY_FF'] ) ) {
 					$redirect = wfHttpToHttps( $redirect );
@@ -478,6 +493,8 @@ class WikiFactoryLoader {
 				header( "Location: $redirect" );
 				wfProfileOut( __METHOD__ );
 
+				return false;*/
+				echo "This is not a valid wikia. Please make sure the 'wikicities' table exists and that wiki id 177 has good info.";
 				return false;
 			}
 		}

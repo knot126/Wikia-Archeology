@@ -137,9 +137,9 @@ if ( defined( 'MW_CONFIG_CALLBACK' ) ) {
 	require_once( MW_CONFIG_FILE );
 }
 
-if ( $wgEnableSelenium ) {
-	require_once( MWInit::compiledPath( "includes/SeleniumWebSettings.php" ) );
-}
+// if ( $wgEnableSelenium ) {
+// 	require_once( MWInit::compiledPath( "includes/SeleniumWebSettings.php" ) );
+// }
 
 // Wikia change - begin - @author: wladek
 // Catch all output

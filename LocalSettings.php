@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IP stands for Installation Path, the top folder of MediaWiki codebase.
  */
@@ -28,7 +29,7 @@ $wgWikiaLocalSettingsPath = __FILE__;
  * @deprecated Code portability: do not add more dc-specific code.
  * @var string $wgWikiaDatacenter
  */
-$wgWikiaDatacenter = getenv( 'WIKIA_DATACENTER' );
+$wgWikiaDatacenter = WIKIA_DC_SJC;//getenv( 'WIKIA_DATACENTER' );
 
 if ( empty( $wgWikiaDatacenter ) ) {
     throw new RuntimeException( 'Datacenter not configured in WIKIA_DATACENTER env variable.' );
@@ -40,7 +41,7 @@ if ( empty( $wgWikiaDatacenter ) ) {
  * @see https://github.com/Wikia/chef-repo/blob/master/cookbooks/common/attributes/default.rb
  * @var string $wgWikiaEnvironment
  */
-$wgWikiaEnvironment = getenv( 'WIKIA_ENVIRONMENT' );
+$wgWikiaEnvironment = WIKIA_ENV_DEV;//getenv( 'WIKIA_ENVIRONMENT' );
 
 /**
  * Force override consul suffix
@@ -227,7 +228,13 @@ if ( $wgForceConsulDatacenter ) {
 /**
  * Access credentials from private repository.
  */
-require_once "$IP/../config/secrets.php";
+//require_once "$IP/../config/secrets.php";
+$wgDBbackendAdminUser = "root";
+$wgDBbackendAdminPassword = "password";
+$wgDBpassword = "password";
+$wgDBcluster = "cluster";
+$wgGcsCredentialsProd = "invalid";
+$wgGoogleMapsKey = "invalid";
 
 /**
  * Variable expansions.
@@ -289,7 +296,13 @@ $wgConf->localVHosts = array_merge(
  * @see https://github.com/Wikia/chef-repo/blob/master/cookbooks/common/attributes/default.rb
  * @see $wgWikiaEnvironment
  */
-require_once "$IP/../config/$wgWikiaEnvironment.php";
+//require_once "$IP/../config/$wgWikiaEnvironment.php";
+$wgFSSwiftDC = array(
+	WIKIA_DC_SJC => array(
+		"server" => null,
+		"config" => null,
+	),
+);
 
 /** Load ondemand profiler configuration */
 require_once "$IP/includes/wikia/Profiler.php";
@@ -419,3 +432,6 @@ if ( !empty( $_GET['forceprofile'] ) && Profiler::instance() instanceof Profiler
 }
 
 require_once "$IP/includes/wikia/Extensions.php";
+
+/// @comment knot126 we also add this:
+$wgShowExceptionDetails = true;

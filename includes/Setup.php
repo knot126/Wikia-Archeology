@@ -26,8 +26,10 @@ $setupProfileIn = Profiler::instance()->scopedProfileIn( $fname );
 
 // Check to see if we are at the file scope
 if ( !isset( $wgVersion ) ) {
-	echo "Error, Setup.php must be included from the file scope, after DefaultSettings.php\n";
-	die( 1 );
+	// This would seem to fix some things...
+	require_once "C:\\Users\\defaultuser\\Downloads\\xampp-windows-x64-7.1.30-5-VC14\\xampp\\htdocs\\app\\LocalSettings.php";
+	//echo "Error, Setup.php must be included from the file scope, after DefaultSettings.php\n";
+	//die( 1 );
 }
 
 // Set various default paths sensibly...

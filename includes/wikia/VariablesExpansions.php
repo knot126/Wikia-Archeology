@@ -222,7 +222,7 @@ $wgLangToCentralMap = [
  * @see includes/api/wikia/ApiFetchBlob.php
  * @var Array $wgLBFactoryConf
  */
-$wgLBFactoryConf = [
+$wgLBFactoryConf = ['class' => 'LBFactory_Simple'];/*[
     'class' => 'LBFactory_Wikia',
     'externalLoads' => [
         'archive1'   => $wgDBArchiveCluster,
@@ -346,7 +346,7 @@ $wgLBFactoryConf = [
 		// SRE-109: Disable automatic transactions for external DBs like blobs cluster
 		'flags' => 0,
 	],
-];
+];*/
 
 /**
  * Legacy base URL to Vignette.
